@@ -58,13 +58,15 @@
         <!-- 下拉菜单 -->
         <el-dropdown class="my-dropdown">
           <span class="el-dropdown-link">
-            <img src="../../assets/images/avatar.jpg" alt="">
-            下拉菜单
+            <!-- 3. 再渲染 -->
+            <img :src="photo" alt="">
+            {{name}}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <!-- native是绑定原生事件的修饰符 -->
+            <el-dropdown-item icon="el-icon-setting" @click.native="setting()">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" @click.native="logout()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -78,19 +80,38 @@
 </template>
 
 <script>
-// import store form '@/store'
+import store from '@/store'
 export default {
   data () {
     return {
+      // 1.先定义值
       isCollapse: false,
       name: '',
       photo: ''
     }
   },
+  created () {
+    // 2. 再赋值
+    const user = store.getUser()
+    this.name = user.name
+    this.photo = user.photo
+  },
   methods: {
     // 切换侧边栏到 收起与展开
     toggleMenu () {
       this.isCollapse = !this.isCollapse
+    },
+    // click 绑定的是原生的dom对象,
+    //  绑定在组件上会被认为是自定义事件, 组件内部没触发是无效事件
+    //  可把click绑定在组件解析后的dom上使用事件修饰符native 绑定原生事件的修饰符
+    setting () {
+      this.$router.push('/setting')
+    },
+    logout () {
+      // 清除用户信息
+      store.clearUser()
+      // 跳转登录
+      this.$router.push({ name: 'login' })
     }
   }
 }

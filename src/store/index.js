@@ -14,5 +14,10 @@ export default {
   getUser () {
     //   获取用户信息  空对象, 当没拿到数据时候返回的是一个空对象
     return JSON.parse(window.sessionStorage.getItem(KEY) || '{}')
+  },
+  // 移除用户信息
+  clearUser () {
+    // clear() 清除所有的sessionStorage本地存储(不建议使用)
+    window.sessionStorage.removeItem(KEY)
   }
 }
