@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   data () {
     //   自定义校验函数 声明在使用, 在return之前定义
@@ -48,8 +49,8 @@ export default {
       // 表单的数据对象
       loginForm: {
         // 字段参考接口文档
-        mobile: '',
-        code: ''
+        mobile: '17320600114',
+        code: '246810'
       },
       //   校验规则对象 , 在data函数中定义
       loginRules: {
@@ -69,19 +70,30 @@ export default {
   methods: {
     login () {
       //   1. 对整个表单进行校验
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          console.log('success')
-          //   2. 校验成功发起登录请求
-          this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
-            .then(res => {
-            //   res 是响应对象 , res.data数据属于响应体
-              this.$router.push('/')
-                .catch(() => {
-                //   请求失败 提示 手机号或验证码错误
-                  this.$message.error('手机或验证码错误')
-                })
-            })
+          // console.log('success')
+          // //   2. 校验成功发起登录请求
+          // this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
+          //   .then(res => {
+          //   //   res 是响应对象 , res.data数据属于响应体
+          //     // console.log(this.$router)
+          //     console.log(res.data)
+          //     store.setUser(res.data.data)
+          //     console.log(this.$router)
+          //     this.$router.push('/')
+          //     // console.log(321)
+          //   }).catch(() => {
+          //     //   请求失败 提示 手机号或验证码错误
+          //     this.$message.error('手机或验证码错误')
+          //   })
+          try {
+            const { data: { data } } = await this.$http.post('authorizations', this.loginForm)
+            store.setUser(data)
+            this.$router.push('/')
+          } catch (e) {
+            this.$message.error('手机号或验证码错误')
+          }
         }
       })
     }
