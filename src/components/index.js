@@ -8,6 +8,7 @@ import MyChannel from '@/components/my-channel'
 export default {
   install (Vue) {
     // Vue.use(使用插件)  Vue就是你use前的Vue
+
     // Vue 全局注册组件即可
     Vue.component(MyBread.name, MyBread)
     Vue.component(MyTest.name, MyTest)
